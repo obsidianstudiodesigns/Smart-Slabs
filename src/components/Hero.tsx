@@ -19,22 +19,20 @@ import {
 
 interface HeroProps {
   onOpenQuoteModal: () => void;
-  onOpenCalculator: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenCalculator }) => {
+export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal }) => {
   const slabHighlights = [
     'Pre-Stressed Hollowcore Slabs',
     'Lattice Rib & Block (Hollow & EPS Blocks)',
     'Pre-Stressed Rib & Block Slabs',
     'Custom Insitu Concrete Slabs',
     'Windeck Composite Slabs',
-    'Pre-Cast & Insitu Concrete Staircases',
-    'Structural Steel Staircases'
+    'Lightweight Polystyrene (EPS) Void Formers'
   ];
 
   return (
-    <section className="relative min-h-[92vh] flex items-center justify-center pt-28 pb-16 overflow-hidden bg-[#070a0f]">
+    <section className="relative min-h-[90vh] flex items-center justify-center pt-28 pb-16 overflow-hidden bg-[#070a0f]">
       {/* Photorealistic Hero Wallpaper Background with Cinematic Gradient Overlays */}
       <div className="absolute inset-0 z-0">
         <img
@@ -71,7 +69,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenCalculator }
                   Suspended Concrete
                 </span>{' '}
                 <span className="text-[#65a30d] font-black inline-block underline decoration-[#5da832]/40 decoration-wavy decoration-2">
-                  Slabs & Stairs
+                  Slabs
                 </span>
               </h1>
               
@@ -88,7 +86,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenCalculator }
               <strong className="text-white font-semibold"> Pre-Stressed Hollowcore</strong>, 
               <strong className="text-white font-semibold"> Lattice & Pre-Stressed Rib & Block</strong> (Concrete & Polystyrene), 
               <strong className="text-white font-semibold"> Insitu Slabs</strong>, and 
-              <strong className="text-white font-semibold"> Pre-Cast Concrete & Steel Staircases</strong>.
+              <strong className="text-white font-semibold"> Composite Decking</strong>.
             </p>
 
             {/* Action CTAs */}
@@ -101,13 +99,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenCalculator }
                 <ArrowRight className="w-4 h-4" />
               </button>
 
-              <button
-                onClick={onOpenCalculator}
+              <a
+                href="#slab-solutions"
                 className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/20 text-sm font-semibold backdrop-blur-sm transition-all hover:border-[#70c03b]/50"
               >
-                <Calculator className="w-4 h-4 text-[#70c03b]" />
-                <span>Instant Slab Calculator</span>
-              </button>
+                <Layers className="w-4 h-4 text-[#70c03b]" />
+                <span>View Slab Systems</span>
+              </a>
 
               <a
                 href={COMPANY_DETAILS.whatsappLink}
@@ -148,7 +146,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenCalculator }
                     Official Solutions
                   </div>
                   <h3 className="text-xl font-bold text-white">
-                    Our Slab & Stair Solutions
+                    Our Slab Solutions
                   </h3>
                 </div>
                 <div className="w-10 h-10 rounded-xl bg-[#5da832]/20 border border-[#5da832]/40 flex items-center justify-center text-[#70c03b]">

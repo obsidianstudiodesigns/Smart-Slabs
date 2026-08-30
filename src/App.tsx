@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { SlabCalculator } from './components/SlabCalculator';
 import { SlabSolutions } from './components/SlabSolutions';
-import { StaircasesSection } from './components/StaircasesSection';
 import { TechnicalSpecsModal } from './components/TechnicalSpecsModal';
-import { ComparisonMatrix } from './components/ComparisonMatrix';
 import { ProjectsGallery } from './components/ProjectsGallery';
 import { ProcessSection } from './components/ProcessSection';
 import { ContactSection } from './components/ContactSection';
@@ -24,19 +21,11 @@ export default function App() {
     setQuoteModalOpen(true);
   };
 
-  const handleOpenCalculator = () => {
-    const el = document.getElementById('calculator');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
     <div className="min-h-screen bg-[#070a0f] text-slate-100 flex flex-col font-sans selection:bg-[#5da832] selection:text-white">
       {/* Navigation */}
       <Navbar 
         onOpenQuoteModal={handleOpenQuoteModal} 
-        onOpenCalculator={handleOpenCalculator} 
       />
 
       {/* Main Content Sections */}
@@ -44,28 +33,12 @@ export default function App() {
         {/* Hero Section with Photorealistic Concrete Slabs Wallpaper */}
         <Hero 
           onOpenQuoteModal={() => handleOpenQuoteModal()} 
-          onOpenCalculator={handleOpenCalculator} 
-        />
-
-        {/* Interactive Slab Estimator & Specifier */}
-        <SlabCalculator 
-          onOpenQuoteModal={handleOpenQuoteModal} 
         />
 
         {/* Core Slab Solutions Breakdown */}
         <SlabSolutions 
           onSelectSolution={(sol) => setSelectedSolutionForSpecs(sol)}
           onOpenQuoteModal={handleOpenQuoteModal}
-        />
-
-        {/* Staircases Section (Concrete Pre-Cast / Insitu & Steel) */}
-        <StaircasesSection 
-          onOpenQuoteModal={handleOpenQuoteModal} 
-        />
-
-        {/* Decision Comparison Matrix */}
-        <ComparisonMatrix 
-          onOpenQuoteModal={handleOpenQuoteModal} 
         />
 
         {/* Featured Projects & Installations */}

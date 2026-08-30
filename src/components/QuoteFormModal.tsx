@@ -33,8 +33,6 @@ export const QuoteFormModal: React.FC<QuoteFormModalProps> = ({
   const [blockType, setBlockType] = useState('Polystyrene (EPS) Lightweight Blocks');
   const [estimatedArea, setEstimatedArea] = useState(initialData?.estimatedArea || 120);
   const [floorLevel, setFloorLevel] = useState(initialData?.floorLevel || 'First Floor (Suspended)');
-  const [requiresStaircase, setRequiresStaircase] = useState(initialData?.requiresStaircase || false);
-  const [staircaseType, setStaircaseType] = useState(initialData?.staircaseType || 'Concrete Pre-Cast Flight');
   const [additionalNotes, setAdditionalNotes] = useState(initialData?.additionalNotes || '');
   const [fileName, setFileName] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -57,7 +55,6 @@ export const QuoteFormModal: React.FC<QuoteFormModalProps> = ({
     `*Block Type:* ${blockType}\n` +
     `*Estimated Area:* ${estimatedArea} m²\n` +
     `*Floor Level:* ${floorLevel}\n` +
-    `*Staircase:* ${requiresStaircase ? staircaseType : 'None'}\n` +
     `*Plans Attached:* ${fileName ? fileName : 'Will send via email/WhatsApp'}\n` +
     `*Notes:* ${additionalNotes}\n` +
     `--------------------------------\n` +
@@ -218,36 +215,6 @@ export const QuoteFormModal: React.FC<QuoteFormModalProps> = ({
                   <option value="Multi-Storey 3+ Floors">Multi-Storey 3+ Floors</option>
                 </select>
               </div>
-            </div>
-
-            {/* Staircase Requirements */}
-            <div className="p-3.5 rounded-xl bg-black/30 border border-white/10 space-y-2">
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="modal-stairs"
-                  checked={requiresStaircase}
-                  onChange={(e) => setRequiresStaircase(e.target.checked)}
-                  className="w-4 h-4 rounded text-[#5da832] focus:ring-[#5da832] bg-slate-900 border-white/20"
-                />
-                <label htmlFor="modal-stairs" className="text-xs font-bold text-slate-200 cursor-pointer">
-                  Require Staircases (Concrete Pre-Cast / Insitu / Steel)?
-                </label>
-              </div>
-
-              {requiresStaircase && (
-                <div className="pt-2">
-                  <select
-                    value={staircaseType}
-                    onChange={(e) => setStaircaseType(e.target.value)}
-                    className="w-full bg-black/40 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#70c03b]"
-                  >
-                    <option value="Concrete Pre-Cast Flight">Concrete Pre-Cast Flight</option>
-                    <option value="Concrete Insitu Cast Flight">Concrete Insitu Custom Flight</option>
-                    <option value="Structural Steel Staircase">Structural Steel Staircase</option>
-                  </select>
-                </div>
-              )}
             </div>
 
             {/* Building Plan Upload Simulation */}

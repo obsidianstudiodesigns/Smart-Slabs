@@ -53,36 +53,39 @@ export const Footer: React.FC<FooterProps> = ({ onOpenQuoteModal }) => {
             </ul>
           </div>
 
-          {/* Staircases & Tools */}
+          {/* Quick Links & Service Areas */}
           <div className="space-y-3">
             <h4 className="font-bold text-white uppercase tracking-wider text-xs">
-              Stairs & Tools
+              Quick Navigation
             </h4>
             <ul className="space-y-2">
               <li>
-                <a href="#staircases" className="hover:text-[#70c03b] transition-colors">
-                  Concrete Pre-Cast Stairs
+                <a href="#slab-solutions" className="hover:text-[#70c03b] transition-colors">
+                  All Slab Systems
                 </a>
               </li>
               <li>
-                <a href="#staircases" className="hover:text-[#70c03b] transition-colors">
-                  Insitu Concrete Staircases
+                <a href="#projects" className="hover:text-[#70c03b] transition-colors">
+                  Completed Projects
                 </a>
               </li>
               <li>
-                <a href="#staircases" className="hover:text-[#70c03b] transition-colors">
-                  Structural Steel Staircases
+                <a href="#process" className="hover:text-[#70c03b] transition-colors">
+                  5-Step Engineering Process
                 </a>
               </li>
               <li>
-                <a href="#calculator" className="hover:text-[#70c03b] transition-colors">
-                  Slab Estimator & Calculator
+                <a href="#contact" className="hover:text-[#70c03b] transition-colors">
+                  Factory & Yard Location
                 </a>
               </li>
               <li>
-                <a href="#comparison" className="hover:text-[#70c03b] transition-colors">
-                  Engineering Decision Matrix
-                </a>
+                <button
+                  onClick={onOpenQuoteModal}
+                  className="hover:text-[#70c03b] transition-colors text-left"
+                >
+                  Request Technical Quotation
+                </button>
               </li>
             </ul>
           </div>

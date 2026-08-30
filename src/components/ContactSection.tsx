@@ -200,35 +200,30 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenQuoteModal
                 for rapid flatbed delivery and crane transport across the Free State and Central South Africa.
               </p>
 
-              {/* Stylized Interactive Map Card */}
-              <div className="relative rounded-2xl overflow-hidden border border-white/15 bg-slate-900 h-64 flex items-center justify-center text-center p-6 group">
-                <div 
-                  className="absolute inset-0 opacity-20 bg-cover bg-center filter grayscale"
-                  style={{
-                    backgroundImage: `radial-gradient(#70c03b 1px, transparent 1px), radial-gradient(#ffffff 1px, transparent 1px)`,
-                    backgroundSize: '20px 20px',
-                    backgroundPosition: '0 0, 10px 10px'
-                  }}
+              {/* Actual Embedded Google Map */}
+              <div className="relative rounded-2xl overflow-hidden border border-white/15 bg-slate-900 h-72 w-full group shadow-inner">
+                <iframe
+                  title="Smart Slabs Yard Location - Bloemfontein"
+                  src="https://maps.google.com/maps?q=148+Fritz+Stockenstrom+Street,+New+East+End,+Bloemfontein,+9301,+South+Africa&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="w-full h-full filter contrast-105"
                 />
 
-                <div className="relative z-10 space-y-3">
-                  <div className="w-12 h-12 rounded-full bg-[#5da832] text-white flex items-center justify-center mx-auto shadow-xl animate-bounce">
-                    <MapPin className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <div className="text-white font-black text-base">Smart Slabs Yard</div>
-                    <div className="text-xs text-slate-300">148 Fritz Stockenstrom Str., New East End</div>
-                    <div className="text-[11px] text-[#70c03b] font-semibold">Bloemfontein, 9301</div>
-                  </div>
-
+                {/* Floating overlay badge with direct Google Maps link */}
+                <div className="absolute bottom-3 right-3 z-10">
                   <a
                     href="https://maps.google.com/?q=148+Fritz+Stockenstrom+Str+New+East+End+Bloemfontein"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold border border-white/15 transition-all"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0b0f17]/90 hover:bg-[#0b0f17] text-white text-xs font-bold border border-white/20 shadow-xl transition-all hover:border-[#70c03b]"
                   >
                     <Navigation className="w-3.5 h-3.5 text-[#70c03b]" />
-                    <span>Open in Google Maps</span>
+                    <span>Open in Google Maps App</span>
                   </a>
                 </div>
               </div>

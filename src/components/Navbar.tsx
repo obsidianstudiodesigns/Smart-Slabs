@@ -17,10 +17,9 @@ import {
 
 interface NavbarProps {
   onOpenQuoteModal: (prefillData?: any) => void;
-  onOpenCalculator: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenCalculator }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -34,12 +33,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenCalculat
 
   const navLinks = [
     { name: 'Slab Solutions', href: '#slab-solutions' },
-    { name: 'Staircases', href: '#staircases' },
-    { name: 'Slab Estimator', href: '#calculator', onClick: onOpenCalculator },
-    { name: 'Comparison', href: '#comparison' },
     { name: 'Projects', href: '#projects' },
-    { name: 'Process', href: '#process' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Engineering Process', href: '#process' },
+    { name: 'Yard & Contact', href: '#contact' },
   ];
 
   return (
@@ -105,14 +101,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenCalculat
               <a
                 key={link.name}
                 href={link.href}
-                onClick={(e) => {
-                  if (link.onClick) {
-                    e.preventDefault();
-                    link.onClick();
-                    const el = document.querySelector(link.href);
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
                 className="hover:text-[#70c03b] transition-colors relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-[#70c03b] hover:after:w-full after:transition-all after:duration-200"
               >
                 {link.name}
@@ -159,15 +147,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenCalculat
                 <a
                   key={link.name}
                   href={link.href}
-                  onClick={(e) => {
-                    setMobileMenuOpen(false);
-                    if (link.onClick) {
-                      e.preventDefault();
-                      link.onClick();
-                      const el = document.querySelector(link.href);
-                      if (el) el.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }}
+                  onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-200 hover:bg-white/5 hover:text-[#70c03b] text-sm font-medium transition-colors"
                 >
                   <span>{link.name}</span>
