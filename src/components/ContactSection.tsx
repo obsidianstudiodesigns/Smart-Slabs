@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { COMPANY_DETAILS, FAQS } from '../data/solutionsData';
 import { Logo } from './Logo';
+import { ContactForm } from './ContactForm';
 import { 
   Phone, 
   Mail, 
@@ -30,53 +31,30 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenQuoteModal
 
   return (
     <section id="contact" className="py-24 bg-[#070a0f] border-t border-white/10 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
         
-        {/* FAQs Section */}
-        <div className="mb-24">
-          <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
+        {/* Contact Form - Matching Exact Reference */}
+        <div>
+          <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#5da832]/15 border border-[#5da832]/30 text-[#70c03b] text-xs font-bold uppercase tracking-widest">
-              <span>Frequently Asked Questions</span>
+              <span>Get In Touch</span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Suspended Slab <span className="text-[#65a30d]">Engineering FAQs</span>
+              Direct Plan Take-Off & <span className="text-[#65a30d]">Technical Enquiry</span>
             </h2>
 
             <p className="text-slate-300 text-sm sm:text-base">
-              Got questions about hollowcore spans, polystyrene vs concrete blocks, or crane access in Bloemfontein?
+              Submit your project specifications or architectural requirements for expert engineering advice and prompt pricing.
             </p>
           </div>
 
-          <div className="max-w-3xl mx-auto space-y-3">
-            {FAQS.map((faq, idx) => (
-              <div
-                key={idx}
-                className="rounded-xl bg-[#141b26] border border-white/10 overflow-hidden transition-colors"
-              >
-                <button
-                  onClick={() => toggleFaq(idx)}
-                  className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 font-bold text-white text-sm sm:text-base hover:text-[#70c03b] transition-colors"
-                >
-                  <span>{faq.question}</span>
-                  {openFaq === idx ? (
-                    <ChevronUp className="w-5 h-5 text-[#70c03b] flex-shrink-0" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-slate-400 flex-shrink-0" />
-                  )}
-                </button>
-
-                {openFaq === idx && (
-                  <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-white/5">
-                    {faq.answer}
-                  </div>
-                )}
-              </div>
-            ))}
+          <div className="max-w-4xl mx-auto">
+            <ContactForm />
           </div>
         </div>
 
-        {/* Official Contact Card Section Matching Flyer */}
+        {/* Official Contact Card Section Matching Flyer + Live Map */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           
           {/* Left Column: Direct Flyer Contact Card */}
@@ -93,7 +71,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenQuoteModal
                   {COMPANY_DETAILS.contactPerson}
                 </h3>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Suspended Concrete Slabs & Staircase Specialist
+                  Suspended Concrete Slabs Specialist
                 </p>
               </div>
 
@@ -246,6 +224,50 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenQuoteModal
 
           </div>
 
+        </div>
+
+        {/* FAQs Section */}
+        <div>
+          <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#5da832]/15 border border-[#5da832]/30 text-[#70c03b] text-xs font-bold uppercase tracking-widest">
+              <span>Frequently Asked Questions</span>
+            </div>
+
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              Suspended Slab <span className="text-[#65a30d]">Engineering FAQs</span>
+            </h2>
+
+            <p className="text-slate-300 text-xs sm:text-sm">
+              Got questions about hollowcore spans, polystyrene vs concrete blocks, or crane access in Bloemfontein?
+            </p>
+          </div>
+
+          <div className="max-w-3xl mx-auto space-y-3">
+            {FAQS.map((faq, idx) => (
+              <div
+                key={idx}
+                className="rounded-xl bg-[#141b26] border border-white/10 overflow-hidden transition-colors"
+              >
+                <button
+                  onClick={() => toggleFaq(idx)}
+                  className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 font-bold text-white text-sm sm:text-base hover:text-[#70c03b] transition-colors"
+                >
+                  <span>{faq.question}</span>
+                  {openFaq === idx ? (
+                    <ChevronUp className="w-5 h-5 text-[#70c03b] flex-shrink-0" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5 text-slate-400 flex-shrink-0" />
+                  )}
+                </button>
+
+                {openFaq === idx && (
+                  <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-white/5">
+                    {faq.answer}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
 
       </div>
