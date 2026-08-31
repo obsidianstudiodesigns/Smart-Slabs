@@ -5,7 +5,6 @@ import {
   Send, 
   CheckCircle2, 
   MessageSquare, 
-  UploadCloud, 
   FileText, 
   Building, 
   MapPin, 
@@ -37,7 +36,6 @@ export const QuoteFormModal: React.FC<QuoteFormModalProps> = ({
   const [estimatedArea, setEstimatedArea] = useState(initialData?.estimatedArea || 120);
   const [floorLevel, setFloorLevel] = useState(initialData?.floorLevel || 'First Floor (Suspended)');
   const [additionalNotes, setAdditionalNotes] = useState(initialData?.additionalNotes || '');
-  const [fileName, setFileName] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -59,7 +57,6 @@ export const QuoteFormModal: React.FC<QuoteFormModalProps> = ({
       `• Void / Block Option: ${blockType}\n` +
       `• Estimated Slab Area: ${estimatedArea} m²\n` +
       `• Floor Level: ${floorLevel}\n` +
-      `• Building Plans: ${fileName ? `Attached (${fileName})` : 'Will send architectural drawings via reply / WhatsApp'}\n` +
       `• Special Engineering Constraints / Notes:\n  ${additionalNotes.trim() || 'None provided'}\n` +
       `----------------------------------------\n\n` +
       `Please review and provide a quotation.\n\n` +
@@ -81,8 +78,7 @@ export const QuoteFormModal: React.FC<QuoteFormModalProps> = ({
       `*Block Type:* ${blockType}\n` +
       `*Estimated Area:* ${estimatedArea} m²\n` +
       `*Floor Level:* ${floorLevel}\n` +
-      `*Plans Attached:* ${fileName ? fileName : 'Will send via WhatsApp'}\n` +
-      `*Notes:* ${additionalNotes || 'Please quote on engineering drawings'}\n` +
+      `*Notes:* ${additionalNotes || 'Please quote on engineering layout'}\n` +
       `--------------------------------\n` +
       `Please provide engineering layout drawings and quotation.`;
 
@@ -292,31 +288,6 @@ export const QuoteFormModal: React.FC<QuoteFormModalProps> = ({
                   <option value="Multi-Storey 3+ Floors">Multi-Storey 3+ Floors</option>
                 </select>
               </div>
-            </div>
-
-            {/* Building Plan Upload Simulation */}
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                Attach Building Plan (PDF / DWG / Image)
-              </label>
-              <label className="border-2 border-dashed border-white/15 hover:border-[#70c03b] rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition-colors bg-black/20">
-                <UploadCloud className="w-6 h-6 text-[#70c03b] mb-1.5" />
-                <span className="text-xs text-slate-300 font-medium">
-                  {fileName ? `Attached: ${fileName}` : 'Click to select or drag architectural drawings here'}
-                </span>
-                <span className="text-[10px] text-slate-500 mt-0.5">
-                  PDF, DWG, DXF, PNG or JPG up to 25MB (Can also attach directly to the email)
-                </span>
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files[0]) {
-                      setFileName(e.target.files[0].name);
-                    }
-                  }}
-                />
-              </label>
             </div>
 
             {/* Notes */}
