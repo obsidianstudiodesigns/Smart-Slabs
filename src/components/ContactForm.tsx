@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { COMPANY_DETAILS } from '../data/solutionsData';
-import { Send, CheckCircle2, MessageSquare, Phone, FileText } from 'lucide-react';
+import { Send, CheckCircle2, MessageSquare, Mail, RotateCcw, Copy, Check } from 'lucide-react';
 
 export const ContactForm: React.FC = () => {
   const [fullName, setFullName] = useState('');
@@ -9,28 +8,89 @@ export const ContactForm: React.FC = () => {
   const [projectClassification, setProjectClassification] = useState('Residential Double-Storey');
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const generateEnquiryText = () => {
+    return (
+      `*DIRECT WEB ENQUIRY - SMART SLABS*\n` +
+      `--------------------------------\n` +
+      `*Name:* ${fullName.trim() || 'Not provided'}\n` +
+      `*Phone / WhatsApp:* ${phone.trim() || 'Not provided'}\n` +
+      `*Email:* ${email.trim() || 'Not provided'}\n` +
+      `*Project Classification:* ${projectClassification}\n` +
+      `*Project Details / Dimensions / Message:*\n${message.trim() || 'Please contact me regarding plan take-off and pricing.'}\n` +
+      `--------------------------------\n` +
+      `Sent via smartslabs.co.za`
+    );
+  };
+
+  const generateMailtoUrl = () => {
+    const subject = `Slab Enquiry: ${projectClassification} - ${fullName.trim() || 'New Client'}`;
+    const emailBody = 
+      `Dear Smart Slabs Engineering Team,\n\n` +
+      `I would like to request a quotation / plan take-off for our project:\n\n` +
+      `Full Name: ${fullName.trim() || 'N/A'}\n` +
+      `Phone / WhatsApp: ${phone.trim() || 'N/A'}\n` +
+      `Email: ${email.trim() || 'N/A'}\n` +
+      `Project Classification: ${projectClassification}\n\n` +
+      `Project Details / Dimensions / Message:\n` +
+      `${message.trim() || 'Please review attached/supplied plans for a suspended concrete slab quotation.'}\n\n` +
+      `Kind regards,\n` +
+      `${fullName.trim() || 'Client'}`;
+
+    return `mailto:slabs@smartslabs.co.za?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+  };
+
+  const getWhatsAppUrl = () => {
+    const text = generateEnquiryText();
+    return `https://wa.me/27824185877?text=${encodeURIComponent(text)}`;
+  };
+
+  const triggerEmailClient = () => {
+    const mailtoUrl = generateMailtoUrl();
+    
+    // Create a temporary link element to trigger mailto reliably across all browsers and iframes
+    try {
+      const link = document.createElement('a');
+      link.href = mailtoUrl;
+      link.target = '_top';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch {
+      window.location.href = mailtoUrl;
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Format WhatsApp message as direct communication option
-    const textMsg = 
-      `*DIRECT WEB ENQUIRY - SMART SLABS*\n` +
-      `--------------------------------\n` +
-      `*Name:* ${fullName || 'Not provided'}\n` +
-      `*Phone:* ${phone || 'Not provided'}\n` +
-      `*Email:* ${email || 'Not provided'}\n` +
-      `*Project Type:* ${projectClassification}\n` +
-      `*Message/Details:* ${message || 'Plan take-off request'}\n` +
-      `--------------------------------\n` +
-      `Sent via smartslabs.co.za`;
+    // Automatically trigger opening the user's default email client
+    triggerEmailClient();
 
-    const whatsappUrl = `https://wa.me/27824185877?text=${encodeURIComponent(textMsg)}`;
-    
-    // Store and set submitted state
+    // Show confirmation state
     setSubmitted(true);
+  };
 
-    // Also optional auto-open or allow manual click
+  const handleOpenWhatsApp = () => {
+    const whatsappUrl = getWhatsAppUrl();
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleCopyDetails = () => {
+    const text = 
+      `To: slabs@smartslabs.co.za\n` +
+      `Subject: Slab Enquiry: ${projectClassification} - ${fullName.trim() || 'New Client'}\n\n` +
+      `Full Name: ${fullName}\n` +
+      `Phone: ${phone}\n` +
+      `Email: ${email}\n` +
+      `Classification: ${projectClassification}\n` +
+      `Details: ${message || 'Plan take-off request'}`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    });
   };
 
   const handleReset = () => {
@@ -40,6 +100,7 @@ export const ContactForm: React.FC = () => {
     setProjectClassification('Residential Double-Storey');
     setMessage('');
     setSubmitted(false);
+    setCopied(false);
   };
 
   return (
@@ -48,7 +109,7 @@ export const ContactForm: React.FC = () => {
       {/* Glow decorative accent */}
       <div className="absolute top-0 right-0 w-80 h-80 bg-[#00a859]/10 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Header Banner - Exact Match to Reference */}
+      {/* Header Banner */}
       <div className="mb-6 relative z-10">
         <div className="inline-block bg-[#00a859] text-white font-black text-xs sm:text-sm px-3 py-1.5 uppercase tracking-wide rounded-sm shadow-md">
           SEND A MESSAGE OR REQUEST PLAN TAKE-OFF
@@ -59,36 +120,58 @@ export const ContactForm: React.FC = () => {
       </div>
 
       {submitted ? (
-        <div className="py-10 px-6 rounded-2xl bg-black/40 border border-[#00a859]/40 text-center space-y-5 animate-fade-in relative z-10">
-          <div className="w-14 h-14 rounded-full bg-[#00a859]/20 border border-[#00a859] flex items-center justify-center mx-auto text-[#00a859]">
+        <div className="py-10 px-6 rounded-2xl bg-black/40 border border-[#00a859]/40 text-center space-y-6 animate-fade-in relative z-10">
+          <div className="w-14 h-14 rounded-full bg-[#00a859]/20 border border-[#00a859] flex items-center justify-center mx-auto text-[#00a859] shadow-lg shadow-[#00a859]/20">
             <CheckCircle2 className="w-8 h-8" />
           </div>
 
-          <div>
-            <h4 className="text-xl font-bold text-white">Enquiry Received!</h4>
-            <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto mt-1.5">
-              Thank you, <strong className="text-white">{fullName || 'Valued Client'}</strong>. Bevan Williams and the engineering team have received your request and will contact you promptly.
+          <div className="space-y-2">
+            <h4 className="text-xl sm:text-2xl font-bold text-white">Opening Email Client...</h4>
+            <p className="text-xs sm:text-sm text-slate-300 max-w-lg mx-auto leading-relaxed">
+              Your default mail app (Outlook, Apple Mail, or Gmail) has been launched with pre-filled enquiry details addressed to <strong className="text-[#00a859]">slabs@smartslabs.co.za</strong>.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-            <a
-              href={`https://wa.me/27824185877?text=${encodeURIComponent(
-                `Hi Bevan, I just submitted an enquiry for ${projectClassification} (${fullName}). Please check your records.`
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-black font-black text-xs shadow-lg transition-all"
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <button
+              onClick={triggerEmailClient}
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#00a859] hover:bg-[#00914d] text-white font-bold text-xs shadow-lg transition-all"
+            >
+              <Mail className="w-4 h-4 text-white" />
+              <span>Launch Mail App Again</span>
+            </button>
+
+            <button
+              onClick={handleOpenWhatsApp}
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-black font-bold text-xs shadow-lg transition-all"
             >
               <MessageSquare className="w-4 h-4 text-black" />
-              <span>Forward Instantly to Bevan on WhatsApp</span>
-            </a>
+              <span>Send via WhatsApp (+27 82 418 5877)</span>
+            </button>
+
+            <button
+              onClick={handleCopyDetails}
+              className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 font-bold text-xs border border-white/15 transition-all"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-4 h-4 text-[#00a859]" />
+                  <span>Copied to Clipboard!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4 text-slate-300" />
+                  <span>Copy Details</span>
+                </>
+              )}
+            </button>
 
             <button
               onClick={handleReset}
-              className="w-full sm:w-auto px-5 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs border border-white/15 transition-all"
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white font-medium text-xs border border-white/10 transition-all"
             >
-              Send Another Message
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>New Enquiry</span>
             </button>
           </div>
         </div>
@@ -193,15 +276,30 @@ export const ContactForm: React.FC = () => {
             />
           </div>
 
-          {/* Submit Button */}
-          <div>
+          {/* Action Buttons: Primary Email Submit & Direct WhatsApp Action */}
+          <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-1">
             <button
               type="submit"
-              className="w-full py-4 rounded-xl bg-[#00a859] hover:bg-[#00914d] active:scale-[0.99] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-lg shadow-[#00a859]/30 transition-all cursor-pointer"
+              className="sm:col-span-8 py-4 rounded-xl bg-[#00a859] hover:bg-[#00914d] active:scale-[0.99] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-lg shadow-[#00a859]/30 transition-all cursor-pointer"
             >
-              <Send className="w-4 h-4 text-white" />
-              <span>Submit Direct Enquiry</span>
+              <Mail className="w-4 h-4 text-white" />
+              <span>Submit Direct Enquiry (Opens Mail App)</span>
             </button>
+
+            <button
+              type="button"
+              onClick={handleOpenWhatsApp}
+              className="sm:col-span-4 py-4 rounded-xl bg-[#1e293b] hover:bg-[#334155] active:scale-[0.99] text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 border border-white/15 shadow-md transition-all cursor-pointer"
+              title="Send directly to Bevan Williams on WhatsApp"
+            >
+              <MessageSquare className="w-4 h-4 text-[#25D366]" />
+              <span>Send via WhatsApp</span>
+            </button>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 px-1 pt-1 gap-1">
+            <span>Direct Email: <strong className="text-slate-300">slabs@smartslabs.co.za</strong></span>
+            <span>WhatsApp / Phone: <strong className="text-slate-300">082 418 5877 (Bevan Williams)</strong></span>
           </div>
         </form>
       )}
@@ -209,3 +307,4 @@ export const ContactForm: React.FC = () => {
     </div>
   );
 };
+
