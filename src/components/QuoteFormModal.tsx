@@ -11,7 +11,10 @@ import {
   MapPin, 
   Phone, 
   Mail,
-  Sparkles
+  Sparkles,
+  Copy,
+  Check,
+  RotateCcw
 } from 'lucide-react';
 
 interface QuoteFormModalProps {
@@ -29,37 +32,111 @@ export const QuoteFormModal: React.FC<QuoteFormModalProps> = ({
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [siteLocation, setSiteLocation] = useState('Bloemfontein');
-  const [slabSolution, setSlabSolution] = useState(initialData?.slabSolution || 'lattice-rib-block');
+  const [slabSolution, setSlabSolution] = useState(initialData?.slabSolution || 'Lattice Rib & Block');
   const [blockType, setBlockType] = useState('Polystyrene (EPS) Lightweight Blocks');
   const [estimatedArea, setEstimatedArea] = useState(initialData?.estimatedArea || 120);
   const [floorLevel, setFloorLevel] = useState(initialData?.floorLevel || 'First Floor (Suspended)');
   const [additionalNotes, setAdditionalNotes] = useState(initialData?.additionalNotes || '');
   const [fileName, setFileName] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   if (!isOpen) return null;
 
+  const generateMailtoUrl = () => {
+    const subject = `Engineering Quote Request: ${slabSolution} - ${fullName.trim() || 'New Client'} (${siteLocation.trim() || 'Bloemfontein'})`;
+    const emailBody = 
+      `Dear Smart Slabs Engineering Team,\n\n` +
+      `I would like to request an official engineering layout drawing & quotation for our suspended slab:\n\n` +
+      `----------------------------------------\n` +
+      `PROJECT & CLIENT SPECIFICATIONS:\n` +
+      `----------------------------------------\n` +
+      `• Client / Company: ${fullName.trim() || 'N/A'}\n` +
+      `• Contact Phone / WhatsApp: ${phone.trim() || 'N/A'}\n` +
+      `• Email Address: ${email.trim() || 'N/A'}\n` +
+      `• Site Suburb / Location: ${siteLocation.trim() || 'Bloemfontein'}\n` +
+      `• Slab System: ${slabSolution}\n` +
+      `• Void / Block Option: ${blockType}\n` +
+      `• Estimated Slab Area: ${estimatedArea} m²\n` +
+      `• Floor Level: ${floorLevel}\n` +
+      `• Building Plans: ${fileName ? `Attached (${fileName})` : 'Will send architectural drawings via reply / WhatsApp'}\n` +
+      `• Special Engineering Constraints / Notes:\n  ${additionalNotes.trim() || 'None provided'}\n` +
+      `----------------------------------------\n\n` +
+      `Please review and provide a quotation.\n\n` +
+      `Kind regards,\n` +
+      `${fullName.trim() || 'Client'}`;
+
+    return `mailto:slabs@smartslabs.co.za?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+  };
+
+  const getWhatsAppUrl = () => {
+    const text = 
+      `*SMART SLABS - QUOTE REQUEST*\n` +
+      `--------------------------------\n` +
+      `*Client:* ${fullName || 'Client'}\n` +
+      `*Phone:* ${phone || 'N/A'}\n` +
+      `*Email:* ${email || 'N/A'}\n` +
+      `*Site Location:* ${siteLocation}\n` +
+      `*Slab Solution:* ${slabSolution}\n` +
+      `*Block Type:* ${blockType}\n` +
+      `*Estimated Area:* ${estimatedArea} m²\n` +
+      `*Floor Level:* ${floorLevel}\n` +
+      `*Plans Attached:* ${fileName ? fileName : 'Will send via WhatsApp'}\n` +
+      `*Notes:* ${additionalNotes || 'Please quote on engineering drawings'}\n` +
+      `--------------------------------\n` +
+      `Please provide engineering layout drawings and quotation.`;
+
+    return `https://wa.me/27824185877?text=${encodeURIComponent(text)}`;
+  };
+
+  const triggerEmailClient = () => {
+    const mailtoUrl = generateMailtoUrl();
+    try {
+      const link = document.createElement('a');
+      link.href = mailtoUrl;
+      link.target = '_top';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch {
+      window.location.href = mailtoUrl;
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Automatically trigger opening default email client
+    triggerEmailClient();
+
+    // Show confirmation view
     setSubmitted(true);
   };
 
-  const whatsappMessage = encodeURIComponent(
-    `*SMART SLABS - QUOTE REQUEST*\n` +
-    `--------------------------------\n` +
-    `*Client:* ${fullName || 'Client'}\n` +
-    `*Phone:* ${phone}\n` +
-    `*Email:* ${email}\n` +
-    `*Site Location:* ${siteLocation}\n` +
-    `*Slab Solution:* ${slabSolution}\n` +
-    `*Block Type:* ${blockType}\n` +
-    `*Estimated Area:* ${estimatedArea} m²\n` +
-    `*Floor Level:* ${floorLevel}\n` +
-    `*Plans Attached:* ${fileName ? fileName : 'Will send via email/WhatsApp'}\n` +
-    `*Notes:* ${additionalNotes}\n` +
-    `--------------------------------\n` +
-    `Please provide engineering layout drawings and quotation.`
-  );
+  const handleOpenWhatsApp = () => {
+    const whatsappUrl = getWhatsAppUrl();
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleCopyDetails = () => {
+    const text = 
+      `To: slabs@smartslabs.co.za\n` +
+      `Subject: Engineering Quote Request: ${slabSolution} - ${fullName || 'Client'}\n\n` +
+      `Client: ${fullName}\n` +
+      `Phone: ${phone}\n` +
+      `Email: ${email}\n` +
+      `Location: ${siteLocation}\n` +
+      `Slab System: ${slabSolution}\n` +
+      `Block Option: ${blockType}\n` +
+      `Area: ${estimatedArea} m²\n` +
+      `Floor: ${floorLevel}\n` +
+      `Notes: ${additionalNotes || 'N/A'}`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    });
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in overflow-y-auto">
@@ -228,7 +305,7 @@ export const QuoteFormModal: React.FC<QuoteFormModalProps> = ({
                   {fileName ? `Attached: ${fileName}` : 'Click to select or drag architectural drawings here'}
                 </span>
                 <span className="text-[10px] text-slate-500 mt-0.5">
-                  PDF, DWG, DXF, PNG or JPG up to 25MB
+                  PDF, DWG, DXF, PNG or JPG up to 25MB (Can also attach directly to the email)
                 </span>
                 <input
                   type="file"
@@ -260,56 +337,82 @@ export const QuoteFormModal: React.FC<QuoteFormModalProps> = ({
             <div className="pt-2">
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-xl bg-[#5da832] hover:bg-[#68bd37] text-white text-xs font-bold shadow-xl shadow-[#5da832]/30 transition-all flex items-center justify-center gap-2"
+                className="w-full py-3.5 rounded-xl bg-[#5da832] hover:bg-[#68bd37] text-white text-xs sm:text-sm font-bold shadow-xl shadow-[#5da832]/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Send className="w-4 h-4" />
-                <span>Submit Details to Bevan Williams</span>
+                <Mail className="w-4 h-4" />
+                <span>Submit Quote Request (Opens Mail App)</span>
               </button>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 px-1 pt-1 gap-1">
+              <span>Direct Email: <strong className="text-slate-300">slabs@smartslabs.co.za</strong></span>
+              <span>WhatsApp / Phone: <strong className="text-slate-300">082 418 5877 (Bevan Williams)</strong></span>
             </div>
 
           </form>
         ) : (
           /* Confirmation State */
           <div className="p-8 sm:p-10 text-center space-y-6">
-            <div className="w-16 h-16 rounded-full bg-[#5da832]/20 border border-[#5da832] flex items-center justify-center text-[#70c03b] mx-auto">
+            <div className="w-16 h-16 rounded-full bg-[#5da832]/20 border border-[#5da832] flex items-center justify-center text-[#70c03b] mx-auto shadow-lg shadow-[#5da832]/20">
               <CheckCircle2 className="w-8 h-8" />
             </div>
 
             <div className="space-y-2">
               <h4 className="text-2xl font-extrabold text-white">
-                Thank You, {fullName || 'Valued Client'}!
+                Opening Mail App...
               </h4>
-              <p className="text-sm text-slate-300 max-w-md mx-auto">
-                Your quote request for <strong className="text-white">{estimatedArea} m²</strong> of <strong className="text-white">{slabSolution}</strong> in <strong className="text-white">{siteLocation}</strong> has been logged. Bevan Williams will review your parameters within 24 hours.
+              <p className="text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
+                Your default mail client has been opened with your quote specifications pre-filled and addressed to <strong className="text-[#70c03b]">slabs@smartslabs.co.za</strong>.
               </p>
             </div>
 
-            {/* Instant WhatsApp Handover */}
-            <div className="p-4 rounded-xl bg-black/40 border border-white/10 space-y-3">
-              <p className="text-xs text-slate-300 font-medium">
-                Want immediate priority response right now? Send this pre-filled request directly to Bevan on WhatsApp:
-              </p>
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <button
+                onClick={triggerEmailClient}
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#5da832] hover:bg-[#68bd37] text-white text-xs font-bold shadow-lg transition-all"
+              >
+                <Mail className="w-4 h-4 text-white" />
+                <span>Launch Mail App Again</span>
+              </button>
 
-              <a
-                href={`https://wa.me/27824185877?text=${whatsappMessage}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-black text-xs font-extrabold shadow-lg transition-all"
+              <button
+                onClick={handleOpenWhatsApp}
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-black text-xs font-bold shadow-lg transition-all"
               >
                 <MessageSquare className="w-4 h-4 text-black" />
                 <span>Send via WhatsApp (+27 82 418 5877)</span>
-              </a>
+              </button>
+
+              <button
+                onClick={handleCopyDetails}
+                className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 font-bold text-xs border border-white/15 transition-all"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-4 h-4 text-[#70c03b]" />
+                    <span>Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4 text-slate-300" />
+                    <span>Copy Details</span>
+                  </>
+                )}
+              </button>
             </div>
 
-            <button
-              onClick={() => {
-                setSubmitted(false);
-                onClose();
-              }}
-              className="text-xs text-slate-400 hover:text-white underline"
-            >
-              Close Window
-            </button>
+            <div className="pt-4 border-t border-white/10">
+              <button
+                onClick={() => {
+                  setSubmitted(false);
+                  onClose();
+                }}
+                className="text-xs text-slate-400 hover:text-white underline cursor-pointer"
+              >
+                Close Window
+              </button>
+            </div>
           </div>
         )}
 
@@ -317,3 +420,4 @@ export const QuoteFormModal: React.FC<QuoteFormModalProps> = ({
     </div>
   );
 };
+
